@@ -158,13 +158,16 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../../PycharmProjects/1695961206_gas-kvas-com-p-kartinki-png-1.png</normaloff>../../PycharmProjects/1695961206_gas-kvas-com-p-kartinki-png-1.png</iconset>
+      <normaloff>../1695961206_gas-kvas-com-p-kartinki-png-1.png</normaloff>../1695961206_gas-kvas-com-p-kartinki-png-1.png</iconset>
     </property>
     <property name="iconSize">
      <size>
-      <width>50</width>
-      <height>50</height>
+      <width>88</width>
+      <height>88</height>
      </size>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="gameFieldButton2">
@@ -181,9 +184,12 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>50</width>
-      <height>50</height>
+      <width>88</width>
+      <height>88</height>
      </size>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="gameFieldButton3">
@@ -200,9 +206,12 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>50</width>
-      <height>50</height>
+      <width>88</width>
+      <height>88</height>
      </size>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="gameFieldButton5">
@@ -219,9 +228,12 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>50</width>
-      <height>50</height>
+      <width>88</width>
+      <height>88</height>
      </size>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="gameFieldButton6">
@@ -238,9 +250,12 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>50</width>
-      <height>50</height>
+      <width>88</width>
+      <height>88</height>
      </size>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="gameFieldButton4">
@@ -257,9 +272,12 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>50</width>
-      <height>50</height>
+      <width>88</width>
+      <height>88</height>
      </size>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="gameFieldButton8">
@@ -276,9 +294,12 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>50</width>
-      <height>50</height>
+      <width>88</width>
+      <height>88</height>
      </size>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="gameFieldButton9">
@@ -295,9 +316,12 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>50</width>
-      <height>50</height>
+      <width>88</width>
+      <height>88</height>
      </size>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="gameFieldButton7">
@@ -314,9 +338,12 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>50</width>
-      <height>50</height>
+      <width>88</width>
+      <height>88</height>
      </size>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QLabel" name="label1">

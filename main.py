@@ -18,27 +18,36 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.button_list = [self.ui.gameFieldButton1, self.ui.gameFieldButton2, self.ui.gameFieldButton3,
                             self.ui.gameFieldButton4, self.ui.gameFieldButton5, self.ui.gameFieldButton6,
                             self.ui.gameFieldButton7, self.ui.gameFieldButton8, self.ui.gameFieldButton9]
+        self.pressedButtonsDict = {}
         self.levels = ["levels/level1", "levels.level2"]
         self.curLevel = 1
         self.updateLevel(self.curLevel)
 
-        self.ui.gameFieldButton1.clicked.connect(self.addCrossTobutton)
-        self.ui.gameFieldButton2.clicked.connect(self.addCrossTobutton)
-        self.ui.gameFieldButton3.clicked.connect(self.addCrossTobutton)
-        self.ui.gameFieldButton4.clicked.connect(self.addCrossTobutton)
-        self.ui.gameFieldButton5.clicked.connect(self.addCrossTobutton)
-        self.ui.gameFieldButton6.clicked.connect(self.addCrossTobutton)
-        self.ui.gameFieldButton7.clicked.connect(self.addCrossTobutton)
-        self.ui.gameFieldButton8.clicked.connect(self.addCrossTobutton)
-        self.ui.gameFieldButton9.clicked.connect(self.addCrossTobutton)
+
+        self.ui.gameFieldButton1.clicked.connect(self.addCrossToButton)
+        self.ui.gameFieldButton2.clicked.connect(self.addCrossToButton)
+        self.ui.gameFieldButton3.clicked.connect(self.addCrossToButton)
+        self.ui.gameFieldButton4.clicked.connect(self.addCrossToButton)
+        self.ui.gameFieldButton5.clicked.connect(self.addCrossToButton)
+        self.ui.gameFieldButton6.clicked.connect(self.addCrossToButton)
+        self.ui.gameFieldButton7.clicked.connect(self.addCrossToButton)
+        self.ui.gameFieldButton8.clicked.connect(self.addCrossToButton)
+        self.ui.gameFieldButton9.clicked.connect(self.addCrossToButton)
         self.ui.backButton.clicked.connect(self.reduceLevel)
         self.ui.nextButton.clicked.connect(self.increaseLevel)
         self.ui.restartButton.clicked.connect(self.restartLevel)
 
-        # self.ui.levelLable.setText("Level: " + level)
 
-    def addCrossTobutton(self):
+
+
+    def addCrossToButton(self):
         button = self.sender()
+
+        #шобы кнопки по два раза не нажимались
+        if hasattr(button, 'is_clicked') and button.is_clicked:
+            return
+        button.is_clicked = True
+
         index = self.button_list.index(button)
         i, j = index // 3, index % 3
 
@@ -63,11 +72,24 @@ class MyMainWindow(QtWidgets.QMainWindow):
         img.paste(cross, (40, 40), cross)
         img.save('new_image.png')
 
-        # Измените изображение на кнопке
         button.setIcon(QIcon('new_image.png'))
 
-        # button.setText("X")
-        # print("click")
+        if len(self.pressedButtonsDict) > 0:
+            self.addWhiteCrossToButtons()
+
+        self.pressedButtonsDict[button] = img
+
+
+
+    def addWhiteCrossToButtons(self):
+        for button, old_image in self.pressedButtonsDict.items():
+            new_image = Image.open("images/whiteCross.png")
+            old_image.paste(new_image, (40, 40), new_image)
+            old_image.save('combined_image.png')
+
+            button.setIcon(QIcon('combined_image.png'))
+
+
 
     def increaseLevel(self):
         if self.curLevel < len(self.levels):
@@ -109,9 +131,14 @@ class MyMainWindow(QtWidgets.QMainWindow):
                     elif matrix[j][k] == 3:
                         self.button_list[i].setIcon(QIcon('images/redSquare.png'))
                         i += 1
+        self.pressedButtonsDict.clear()
 
+        #шобы кнопки нажимались после обновления экрана
+        for button in self.button_list:
+            button.is_clicked = False
     def restartLevel(self):
         self.updateLevel(self.curLevel)
+
 
 
 if __name__ == "__main__":

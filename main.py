@@ -8,8 +8,16 @@ from PIL import Image
 from ui import Ui_MainWindow
 
 
-class MyMainWindow(QtWidgets.QMainWindow):
+class ModalWindow(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Победа")
+        self.setFixedSize(200, 100)
+        self.textLabel = QtWidgets.QLabel(self)
+        self.textLabel.setText("Вы прошли этот уровень!")
 
+
+class MyMainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
@@ -19,56 +27,73 @@ class MyMainWindow(QtWidgets.QMainWindow):
                             self.ui.gameFieldButton4, self.ui.gameFieldButton5, self.ui.gameFieldButton6,
                             self.ui.gameFieldButton7, self.ui.gameFieldButton8, self.ui.gameFieldButton9]
         self.pressedButtonsDict = {}
-        self.levels = ["levels/level1", "levels.level2"]
+        self.colorPathsDict = {1: "images/blueCircle.png", 2: "images/redCircle.png",
+                               3: "images/blueSquare.png", 4: "images/redSquare.png"}
+        self.usedFigures = []
+        self.levels = ["levels/level1", "levels/level2", "levels/level3"]
         self.curLevel = 1
-        self.updateLevel(self.curLevel)
+        self.updateLevel()
 
+        self.ui.gameFieldButton1.clicked.connect(self.makeAmove)
+        self.ui.gameFieldButton1.click()
+        self.ui.gameFieldButton2.clicked.connect(self.makeAmove)
+        self.ui.gameFieldButton3.clicked.connect(self.makeAmove)
+        self.ui.gameFieldButton4.clicked.connect(self.makeAmove)
+        self.ui.gameFieldButton5.clicked.connect(self.makeAmove)
+        self.ui.gameFieldButton6.clicked.connect(self.makeAmove)
+        self.ui.gameFieldButton7.clicked.connect(self.makeAmove)
+        self.ui.gameFieldButton8.clicked.connect(self.makeAmove)
+        self.ui.gameFieldButton9.clicked.connect(self.makeAmove)
 
-        self.ui.gameFieldButton1.clicked.connect(self.addCrossToButton)
-        self.ui.gameFieldButton2.clicked.connect(self.addCrossToButton)
-        self.ui.gameFieldButton3.clicked.connect(self.addCrossToButton)
-        self.ui.gameFieldButton4.clicked.connect(self.addCrossToButton)
-        self.ui.gameFieldButton5.clicked.connect(self.addCrossToButton)
-        self.ui.gameFieldButton6.clicked.connect(self.addCrossToButton)
-        self.ui.gameFieldButton7.clicked.connect(self.addCrossToButton)
-        self.ui.gameFieldButton8.clicked.connect(self.addCrossToButton)
-        self.ui.gameFieldButton9.clicked.connect(self.addCrossToButton)
         self.ui.backButton.clicked.connect(self.reduceLevel)
         self.ui.nextButton.clicked.connect(self.increaseLevel)
         self.ui.restartButton.clicked.connect(self.restartLevel)
 
+    def open_modal_window(self):
+        self.modal_window = ModalWindow(self)
+        self.modal_window.exec_()
 
-
-
-    def addCrossToButton(self):
+    def makeAmove(self):
         button = self.sender()
 
-        #шобы кнопки по два раза не нажимались
-        if hasattr(button, 'is_clicked') and button.is_clicked:
+        if len(self.pressedButtonsDict) > 0:
+            if not self.movePermission():
+                return
+
+        # шобы кнопки по два раза не нажимались
+        if hasattr(button, 'is_clicked') and button.is_clicked == True:
             return
         button.is_clicked = True
 
         index = self.button_list.index(button)
         i, j = index // 3, index % 3
 
-        if self.curLevel == 1:
-            file = open('levels/level1', 'r')
-        elif self.curLevel == 2:
-            file = open('levels/level2', 'r')
+        # выбор уровня
+        file = open(self.levels[self.curLevel - 1], 'r')
+
         lines = file.readlines()
         matrix = [line.strip().split() for line in lines]
         matrix = [[int(num) for num in row] for row in matrix]
 
-        if matrix[i][j] == 0:
+        if matrix[i][j] == 1:
             img = Image.open('images/blueCircle.png')
-        elif matrix[i][j] == 1:
-            img = Image.open('images/redCircle.png')
+            self.usedFigures.append('images/blueCircle.png')
         elif matrix[i][j] == 2:
-            img = Image.open('images/blueSquare.png')
+            img = Image.open('images/redCircle.png')
+            self.usedFigures.append('images/redCircle.png')
         elif matrix[i][j] == 3:
+            img = Image.open('images/blueSquare.png')
+            self.usedFigures.append('images/blueSquare.png')
+        elif matrix[i][j] == 4:
             img = Image.open('images/redSquare.png')
+            self.usedFigures.append('images/redSquare.png')
+        elif matrix[i][j] == 0:
+            img = Image.open('images/white.png')
+
+
 
         cross = Image.open('images/cross.png')
+
         img.paste(cross, (40, 40), cross)
         img.save('new_image.png')
 
@@ -79,7 +104,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
         self.pressedButtonsDict[button] = img
 
-
+        self.victoryRule()
 
     def addWhiteCrossToButtons(self):
         for button, old_image in self.pressedButtonsDict.items():
@@ -89,27 +114,29 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
             button.setIcon(QIcon('combined_image.png'))
 
-
-
     def increaseLevel(self):
         if self.curLevel < len(self.levels):
             self.curLevel += 1
             self.ui.levelLable.setText(str(self.curLevel))
 
-            self.updateLevel(self.curLevel)
+            self.updateLevel()
+            self.ui.gameFieldButton1.click()
 
     def reduceLevel(self):
         if self.curLevel > 1:
             self.curLevel -= 1
             self.ui.levelLable.setText(str(self.curLevel))
 
-            self.updateLevel(self.curLevel)
+            self.updateLevel()
+            self.ui.gameFieldButton1.click()
 
-    def updateLevel(self, level):
-        if level == 1:
-            file = open('levels/level1', 'r')
-        elif level == 2:
-            file = open('levels/level2', 'r')
+    def updateLevel(self):
+        # шобы кнопки нажимались после обновления экрана
+        for button in self.button_list:
+            button.is_clicked = False
+
+        file = open(self.levels[self.curLevel - 1], 'r')
+
         lines = file.readlines()
         matrix = [line.strip().split() for line in lines]
         matrix = [[int(num) for num in row] for row in matrix]
@@ -119,26 +146,69 @@ class MyMainWindow(QtWidgets.QMainWindow):
         while i < len(self.button_list):
             for j in range(0, len(matrix)):
                 for k in range(0, len(matrix[0])):
-                    if matrix[j][k] == 0:
+                    a = matrix[j][k]
+                    if matrix[j][k] == 1:
                         self.button_list[i].setIcon(QIcon('images/blueCircle.png'))
                         i += 1
-                    elif matrix[j][k] == 1:
+                    elif matrix[j][k] == 2:
                         self.button_list[i].setIcon(QIcon('images/redCircle.png'))
                         i += 1
-                    elif matrix[j][k] == 2:
+                    elif matrix[j][k] == 3:
                         self.button_list[i].setIcon(QIcon('images/blueSquare.png'))
                         i += 1
-                    elif matrix[j][k] == 3:
+                    elif matrix[j][k] == 4:
                         self.button_list[i].setIcon(QIcon('images/redSquare.png'))
                         i += 1
+                    elif matrix[j][k] == 0:
+                        self.button_list[i].setIcon(QIcon('images/white.png'))
+                        self.button_list[i].is_clicked = True
+                        i += 1
+
+
+
         self.pressedButtonsDict.clear()
 
-        #шобы кнопки нажимались после обновления экрана
-        for button in self.button_list:
-            button.is_clicked = False
-    def restartLevel(self):
-        self.updateLevel(self.curLevel)
 
+
+
+
+    def restartLevel(self):
+        self.updateLevel()
+        self.ui.gameFieldButton1.click()
+
+    def movePermission(self):
+        button = self.sender()
+        index = self.button_list.index(button)
+        i, j = index // 3, index % 3
+        file = open(self.levels[self.curLevel - 1], 'r')
+
+        lines = file.readlines()
+        matrix = [line.strip().split() for line in lines]
+        matrix = [[int(num) for num in row] for row in matrix]
+
+        lastButtonFigure = self.usedFigures[-1]
+
+        a = matrix[i][j]
+        if matrix[i][j] == 1:  # если след клетка синий круг
+            if lastButtonFigure == 'images/blueCircle.png' or lastButtonFigure == 'images/redCircle.png' or lastButtonFigure == 'images/blueSquare.png':
+                return True
+        elif matrix[i][j] == 2:  # если след клетка красный круг
+            if lastButtonFigure == 'images/redCircle.png' or lastButtonFigure == 'images/blueCircle.png' or lastButtonFigure == 'images/redSquare.png':
+                return True
+        elif matrix[i][j] == 3:  # если след клетка синий квадрат
+            if lastButtonFigure == 'images/blueSquare.png' or lastButtonFigure == 'images/blueCircle.png' or lastButtonFigure == 'images/redSquare.png':
+                return True
+        elif matrix[i][j] == 4:  # если след клетка красный квадрат
+            if lastButtonFigure == 'images/redSquare.png' or lastButtonFigure == 'images/redCircle.png' or lastButtonFigure == 'images/blueSquare.png':
+                return True
+        elif matrix[i][j] == 0:  # если след клетка пустая
+            return True
+        return False
+
+    def victoryRule(self):
+        self.modal_window = ModalWindow(self)
+        if len(self.pressedButtonsDict) == len(self.button_list):
+            self.modal_window.exec_()
 
 
 if __name__ == "__main__":

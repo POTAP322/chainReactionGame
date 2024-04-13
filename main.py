@@ -1,11 +1,11 @@
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import *
-from PyQt5 import QtCore, QtGui
 from PyQt5.QtGui import *
-from PyQt5.QtCore import *
+
 from PIL import Image
+from PyQt5.uic.properties import QtCore
 
 from ui import Ui_MainWindow
+from ui2 import Ui_MainWindow2
 
 
 class ModalWindow(QtWidgets.QDialog):
@@ -21,6 +21,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
+        self.ui2 = Ui_MainWindow2()
         self.ui.setupUi(self)
 
         self.button_list = [self.ui.gameFieldButton1, self.ui.gameFieldButton2, self.ui.gameFieldButton3,
@@ -30,8 +31,9 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.colorPathsDict = {1: "images/blueCircle.png", 2: "images/redCircle.png",
                                3: "images/blueSquare.png", 4: "images/redSquare.png"}
         self.usedFigures = []
-        self.levels = ["levels/level1", "levels/level2", "levels/level3"]
+        self.levels = ["levels/level1", "levels/level2", "levels/level3", "levels/level4"]
         self.curLevel = 1
+        self.curGameFieldSize = 3
         self.updateLevel()
 
         self.ui.gameFieldButton1.clicked.connect(self.makeAmove)
@@ -45,6 +47,54 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.ui.gameFieldButton8.clicked.connect(self.makeAmove)
         self.ui.gameFieldButton9.clicked.connect(self.makeAmove)
 
+        self.ui.backButton.clicked.connect(self.reduceLevel)
+        self.ui.nextButton.clicked.connect(self.increaseLevel)
+        self.ui.restartButton.clicked.connect(self.restartLevel)
+
+    def switchToUi(self, uiNum):
+        # Сохраняем текущие значения
+
+        curLevel = self.curLevel
+        levelLable = self.ui.levelLable.text()
+        pressedButtonsDict = self.pressedButtonsDict
+        colorPathsDict = self.colorPathsDict
+        usedFigures = self.usedFigures
+        levels = self.levels
+
+        if uiNum == 1:
+            self.ui = Ui_MainWindow()
+            self.ui.setupUi(self)
+            self.resize(400, 420)
+
+
+            self.maximumSize()
+            self.curGameFieldSize = 3
+            # Обновляем список кнопок
+            self.button_list = [self.ui.gameFieldButton1, self.ui.gameFieldButton2, self.ui.gameFieldButton3,
+                                self.ui.gameFieldButton4, self.ui.gameFieldButton5, self.ui.gameFieldButton6,
+                                self.ui.gameFieldButton7, self.ui.gameFieldButton8, self.ui.gameFieldButton9]
+        if uiNum == 2:
+            self.ui = self.ui2
+            self.ui.setupUi(self)
+            self.curGameFieldSize = 4
+            # Обновляем список кнопок
+            self.button_list = [self.ui.gameFieldButton1, self.ui.gameFieldButton2, self.ui.gameFieldButton3,
+                                self.ui.gameFieldButton4, self.ui.gameFieldButton5, self.ui.gameFieldButton6,
+                                self.ui.gameFieldButton7, self.ui.gameFieldButton8, self.ui.gameFieldButton9,
+                                self.ui.gameFieldButton10, self.ui.gameFieldButton11, self.ui.gameFieldButton12,
+                                self.ui.gameFieldButton13, self.ui.gameFieldButton14, self.ui.gameFieldButton15,
+                                self.ui.gameFieldButton16]
+
+        # Восстанавливаем сохраненные значения
+        self.curLevel = curLevel
+        self.ui.levelLable.setText(levelLable)
+        self.pressedButtonsDict = pressedButtonsDict
+        self.colorPathsDict = colorPathsDict
+        self.usedFigures = usedFigures
+        self.levels = levels
+        # Подключаем новые кнопки
+        for button in self.button_list:
+            button.clicked.connect(self.makeAmove)
         self.ui.backButton.clicked.connect(self.reduceLevel)
         self.ui.nextButton.clicked.connect(self.increaseLevel)
         self.ui.restartButton.clicked.connect(self.restartLevel)
@@ -90,8 +140,6 @@ class MyMainWindow(QtWidgets.QMainWindow):
         elif matrix[i][j] == 0:
             img = Image.open('images/white.png')
 
-
-
         cross = Image.open('images/cross.png')
 
         img.paste(cross, (40, 40), cross)
@@ -117,29 +165,38 @@ class MyMainWindow(QtWidgets.QMainWindow):
     def increaseLevel(self):
         if self.curLevel < len(self.levels):
             self.curLevel += 1
+            a = self.ui.levelLable.text()
             self.ui.levelLable.setText(str(self.curLevel))
-
+            b = self.ui.levelLable.text()
             self.updateLevel()
             self.ui.gameFieldButton1.click()
 
     def reduceLevel(self):
         if self.curLevel > 1:
+            a = self.ui.levelLable.text()
             self.curLevel -= 1
+
             self.ui.levelLable.setText(str(self.curLevel))
+            b = self.ui.levelLable.text()
 
             self.updateLevel()
             self.ui.gameFieldButton1.click()
 
     def updateLevel(self):
-        # шобы кнопки нажимались после обновления экрана
-        for button in self.button_list:
-            button.is_clicked = False
 
         file = open(self.levels[self.curLevel - 1], 'r')
-
         lines = file.readlines()
         matrix = [line.strip().split() for line in lines]
         matrix = [[int(num) for num in row] for row in matrix]
+
+        if len(matrix) > 3 and self.curGameFieldSize != 4:
+            self.switchToUi(2)
+        elif len(matrix) < 4 and self.curGameFieldSize != 3:
+            self.switchToUi(1)
+
+        # шобы кнопки нажимались после обновления экрана
+        for button in self.button_list:
+            button.is_clicked = False
 
         # i - счётчик шобы понимать какую кнопку менять
         i = 0
@@ -164,13 +221,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
                         self.button_list[i].is_clicked = True
                         i += 1
 
-
-
         self.pressedButtonsDict.clear()
-
-
-
-
 
     def restartLevel(self):
         self.updateLevel()

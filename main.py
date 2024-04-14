@@ -8,6 +8,7 @@ import collections
 
 from ui import Ui_MainWindow
 from ui2 import Ui_MainWindow2
+from info import Ui_infoForm
 
 
 class ModalWindow(QtWidgets.QDialog):
@@ -17,6 +18,13 @@ class ModalWindow(QtWidgets.QDialog):
         self.setFixedSize(200, 100)
         self.textLabel = QtWidgets.QLabel(self)
         self.textLabel.setText("Вы прошли этот уровень!")
+
+
+class InfoWindow(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
+        self.infoForm = Ui_infoForm()
+        self.infoForm.setupUi(self)
 
 
 class MyMainWindow(QtWidgets.QMainWindow):
@@ -53,6 +61,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.ui.backButton.clicked.connect(self.reduceLevel)
         self.ui.nextButton.clicked.connect(self.increaseLevel)
         self.ui.restartButton.clicked.connect(self.restartLevel)
+        self.ui.infoButton.clicked.connect(self.openInfoWindow)
 
     def switchToUi(self, uiNum):
         # Сохраняем текущие значения
@@ -99,10 +108,15 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.ui.backButton.clicked.connect(self.reduceLevel)
         self.ui.nextButton.clicked.connect(self.increaseLevel)
         self.ui.restartButton.clicked.connect(self.restartLevel)
+        self.ui.infoButton.clicked.connect(self.openInfoWindow)
 
-    def open_modal_window(self):
-        self.modal_window = ModalWindow(self)
-        self.modal_window.exec_()
+    def openVictoryWindow(self):
+        self.modalWindow = ModalWindow(self)
+        self.modalWindow.exec_()
+
+    def openInfoWindow(self):
+        self.infoWindow = InfoWindow()
+        self.infoWindow.show()
 
     def makeAmove(self):
         button = self.sender()
@@ -154,9 +168,9 @@ class MyMainWindow(QtWidgets.QMainWindow):
         cross = Image.open('images/cross.png')
 
         img.paste(cross, (40, 40), cross)
-        img.save('new_image.png')
+        img.save('images/newImage.png')
 
-        button.setIcon(QIcon('new_image.png'))
+        button.setIcon(QIcon('images/newImage.png'))
 
         if len(self.pressedButtonsDict) > 0:
             self.addWhiteCrossToButtons()
@@ -169,9 +183,9 @@ class MyMainWindow(QtWidgets.QMainWindow):
         for button, old_image in self.pressedButtonsDict.items():
             new_image = Image.open("images/whiteCross.png")
             old_image.paste(new_image, (40, 40), new_image)
-            old_image.save('combined_image.png')
+            old_image.save('images/combinedImage.png')
 
-            button.setIcon(QIcon('combined_image.png'))
+            button.setIcon(QIcon('images/combinedImage.png'))
 
     def increaseLevel(self):
         if self.curLevel < len(self.levels):
@@ -293,7 +307,6 @@ class MyMainWindow(QtWidgets.QMainWindow):
         return False
 
     def victoryRule(self):
-        self.modal_window = ModalWindow(self)
 
         file = open(self.levels[self.curLevel - 1], 'r')
         lines = file.readlines()
@@ -305,7 +318,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
                 if matrix[i][j] == 0:
                     empyFieldsCount += 1
         if len(self.pressedButtonsDict) == len(self.button_list) - empyFieldsCount:
-            self.modal_window.exec_()
+            self.openVictoryWindow()
 
 
 if __name__ == "__main__":

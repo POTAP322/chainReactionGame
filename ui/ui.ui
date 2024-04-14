@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
-    <height>520</height>
+    <width>400</width>
+    <height>420</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,16 +19,10 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <property name="minimumSize">
-   <size>
-    <width>500</width>
-    <height>520</height>
-   </size>
-  </property>
   <property name="maximumSize">
    <size>
-    <width>500</width>
-    <height>520</height>
+    <width>400</width>
+    <height>420</height>
    </size>
   </property>
   <property name="mouseTracking">
@@ -55,8 +49,8 @@
    </property>
    <property name="maximumSize">
     <size>
-     <width>500</width>
-     <height>500</height>
+     <width>400</width>
+     <height>400</height>
     </size>
    </property>
    <property name="mouseTracking">
@@ -68,7 +62,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>200</x>
+      <x>150</x>
       <y>20</y>
       <width>101</width>
       <height>41</height>
@@ -102,7 +96,7 @@
    <widget class="QLabel" name="levelLable">
     <property name="geometry">
      <rect>
-      <x>470</x>
+      <x>360</x>
       <y>10</y>
       <width>16</width>
       <height>21</height>
@@ -121,7 +115,7 @@
    <widget class="QPushButton" name="backButton">
     <property name="geometry">
      <rect>
-      <x>430</x>
+      <x>320</x>
       <y>30</y>
       <width>21</width>
       <height>21</height>
@@ -137,7 +131,7 @@
    <widget class="QPushButton" name="nextButton">
     <property name="geometry">
      <rect>
-      <x>460</x>
+      <x>350</x>
       <y>30</y>
       <width>21</width>
       <height>21</height>
@@ -220,7 +214,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="gameFieldButton6">
+   <widget class="QPushButton" name="gameFieldButton5">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -242,7 +236,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="gameFieldButton7">
+   <widget class="QPushButton" name="gameFieldButton6">
     <property name="geometry">
      <rect>
       <x>250</x>
@@ -264,7 +258,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="gameFieldButton5">
+   <widget class="QPushButton" name="gameFieldButton4">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -286,7 +280,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="gameFieldButton10">
+   <widget class="QPushButton" name="gameFieldButton8">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -308,7 +302,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="gameFieldButton11">
+   <widget class="QPushButton" name="gameFieldButton9">
     <property name="geometry">
      <rect>
       <x>250</x>
@@ -330,7 +324,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="gameFieldButton9">
+   <widget class="QPushButton" name="gameFieldButton7">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -355,7 +349,7 @@
    <widget class="QLabel" name="label1">
     <property name="geometry">
      <rect>
-      <x>440</x>
+      <x>330</x>
       <y>10</y>
       <width>31</width>
       <height>21</height>
@@ -370,158 +364,17 @@
      <string>Level:</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="gameFieldButton4">
+   <widget class="QPushButton" name="infoButton">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>80</y>
-      <width>100</width>
-      <height>100</height>
+      <x>10</x>
+      <y>10</y>
+      <width>21</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string/>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>88</width>
-      <height>88</height>
-     </size>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="gameFieldButton8">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>180</y>
-      <width>100</width>
-      <height>100</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>88</width>
-      <height>88</height>
-     </size>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="gameFieldButton12">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>280</y>
-      <width>100</width>
-      <height>100</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>88</width>
-      <height>88</height>
-     </size>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="gameFieldButton13">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>380</y>
-      <width>100</width>
-      <height>100</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>88</width>
-      <height>88</height>
-     </size>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="gameFieldButton14">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>380</y>
-      <width>100</width>
-      <height>100</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>88</width>
-      <height>88</height>
-     </size>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="gameFieldButton15">
-    <property name="geometry">
-     <rect>
-      <x>250</x>
-      <y>380</y>
-      <width>100</width>
-      <height>100</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>88</width>
-      <height>88</height>
-     </size>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="gameFieldButton16">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>380</y>
-      <width>100</width>
-      <height>100</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>88</width>
-      <height>88</height>
-     </size>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
+     <string>?</string>
     </property>
    </widget>
   </widget>

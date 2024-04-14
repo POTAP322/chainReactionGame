@@ -122,6 +122,9 @@ class Ui_MainWindow(object):
         font.setFamily("Sans Serif Collection")
         self.label1.setFont(font)
         self.label1.setObjectName("label1")
+        self.infoButton = QtWidgets.QPushButton(self.centralwidget)
+        self.infoButton.setGeometry(QtCore.QRect(10, 10, 21, 21))
+        self.infoButton.setObjectName("infoButton")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
@@ -139,6 +142,7 @@ class Ui_MainWindow(object):
         self.backButton.setText(_translate("MainWindow", "<"))
         self.nextButton.setText(_translate("MainWindow", ">"))
         self.label1.setText(_translate("MainWindow", "Level:"))
+        self.infoButton.setText(_translate("MainWindow", "?"))
 
 
 if __name__ == "__main__":

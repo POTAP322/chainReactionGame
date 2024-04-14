@@ -1,8 +1,10 @@
+import PyQt5
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import *
 
 from PIL import Image
 from PyQt5.uic.properties import QtCore
+import collections
 
 from ui import Ui_MainWindow
 from ui2 import Ui_MainWindow2
@@ -29,7 +31,8 @@ class MyMainWindow(QtWidgets.QMainWindow):
                             self.ui.gameFieldButton7, self.ui.gameFieldButton8, self.ui.gameFieldButton9]
         self.pressedButtonsDict = {}
         self.colorPathsDict = {1: "images/blueCircle.png", 2: "images/redCircle.png",
-                               3: "images/blueSquare.png", 4: "images/redSquare.png"}
+                               3: "images/blueSquare.png", 4: "images/redSquare.png",
+                               5: "images/greenCircle.png", 6: "images/greenSquare.png"}
         self.usedFigures = []
         self.levels = ["levels/level1", "levels/level2", "levels/level3", "levels/level4"]
         self.curLevel = 1
@@ -53,7 +56,6 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
     def switchToUi(self, uiNum):
         # Сохраняем текущие значения
-
         curLevel = self.curLevel
         levelLable = self.ui.levelLable.text()
         pressedButtonsDict = self.pressedButtonsDict
@@ -64,10 +66,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
         if uiNum == 1:
             self.ui = Ui_MainWindow()
             self.ui.setupUi(self)
-            self.resize(400, 420)
-
-
-            self.maximumSize()
+            self.setFixedSize(400, 420)
             self.curGameFieldSize = 3
             # Обновляем список кнопок
             self.button_list = [self.ui.gameFieldButton1, self.ui.gameFieldButton2, self.ui.gameFieldButton3,
@@ -77,6 +76,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
             self.ui = self.ui2
             self.ui.setupUi(self)
             self.curGameFieldSize = 4
+            a = self.size()
             # Обновляем список кнопок
             self.button_list = [self.ui.gameFieldButton1, self.ui.gameFieldButton2, self.ui.gameFieldButton3,
                                 self.ui.gameFieldButton4, self.ui.gameFieldButton5, self.ui.gameFieldButton6,
@@ -92,7 +92,8 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.colorPathsDict = colorPathsDict
         self.usedFigures = usedFigures
         self.levels = levels
-        # Подключаем новые кнопки
+
+        # Подключаем кнопки
         for button in self.button_list:
             button.clicked.connect(self.makeAmove)
         self.ui.backButton.clicked.connect(self.reduceLevel)
@@ -105,7 +106,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
 
     def makeAmove(self):
         button = self.sender()
-
+        # можно ли ходить или нет
         if len(self.pressedButtonsDict) > 0:
             if not self.movePermission():
                 return
@@ -116,7 +117,11 @@ class MyMainWindow(QtWidgets.QMainWindow):
         button.is_clicked = True
 
         index = self.button_list.index(button)
-        i, j = index // 3, index % 3
+        if self.curGameFieldSize == 3:
+            i, j = index // 3, index % 3
+
+        elif self.curGameFieldSize == 4:
+            i, j = index // 4, index % 4
 
         # выбор уровня
         file = open(self.levels[self.curLevel - 1], 'r')
@@ -137,6 +142,12 @@ class MyMainWindow(QtWidgets.QMainWindow):
         elif matrix[i][j] == 4:
             img = Image.open('images/redSquare.png')
             self.usedFigures.append('images/redSquare.png')
+        elif matrix[i][j] == 5:
+            img = Image.open('images/greenCircle.png')
+            self.usedFigures.append('images/greenCircle.png')
+        elif matrix[i][j] == 6:
+            img = Image.open('images/greenSquare.png')
+            self.usedFigures.append('images/greenSquare.png')
         elif matrix[i][j] == 0:
             img = Image.open('images/white.png')
 
@@ -216,6 +227,12 @@ class MyMainWindow(QtWidgets.QMainWindow):
                     elif matrix[j][k] == 4:
                         self.button_list[i].setIcon(QIcon('images/redSquare.png'))
                         i += 1
+                    elif matrix[j][k] == 5:
+                        self.button_list[i].setIcon(QIcon('images/greenCircle.png'))
+                        i += 1
+                    elif matrix[j][k] == 6:
+                        self.button_list[i].setIcon(QIcon('images/greenSquare.png'))
+                        i += 1
                     elif matrix[j][k] == 0:
                         self.button_list[i].setIcon(QIcon('images/white.png'))
                         self.button_list[i].is_clicked = True
@@ -228,9 +245,20 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.ui.gameFieldButton1.click()
 
     def movePermission(self):
+        # кнопка которую хочу нажать ( её индексы будут i,j)
         button = self.sender()
         index = self.button_list.index(button)
-        i, j = index // 3, index % 3
+        # последня нажатая кнопка(её индексы будут k,n)
+        [button2] = collections.deque(self.pressedButtonsDict, maxlen=1)
+        index2 = self.button_list.index(button2)
+
+        if self.curGameFieldSize == 3:
+            i, j = index // 3, index % 3
+            k, n = index2 // 3, index2 % 3
+
+        elif self.curGameFieldSize == 4:
+            i, j = index // 4, index % 4
+            k, n = index2 // 4, index2 % 4
         file = open(self.levels[self.curLevel - 1], 'r')
 
         lines = file.readlines()
@@ -240,25 +268,43 @@ class MyMainWindow(QtWidgets.QMainWindow):
         lastButtonFigure = self.usedFigures[-1]
 
         a = matrix[i][j]
-        if matrix[i][j] == 1:  # если след клетка синий круг
-            if lastButtonFigure == 'images/blueCircle.png' or lastButtonFigure == 'images/redCircle.png' or lastButtonFigure == 'images/blueSquare.png':
+        if i == k or j == n:
+            if matrix[i][j] == 1:  # если след клетка синий круг
+                if lastButtonFigure == 'images/blueCircle.png' or lastButtonFigure == 'images/redCircle.png' or lastButtonFigure == 'images/blueSquare.png' or lastButtonFigure == 'images/greenCircle.png':
+                    return True
+            elif matrix[i][j] == 2:  # если след клетка красный круг
+                if lastButtonFigure == 'images/redCircle.png' or lastButtonFigure == 'images/blueCircle.png' or lastButtonFigure == 'images/redSquare.png' or lastButtonFigure == 'images/greenCircle.png':
+                    return True
+            elif matrix[i][j] == 3:  # если след клетка синий квадрат
+                if lastButtonFigure == 'images/blueSquare.png' or lastButtonFigure == 'images/blueCircle.png' or lastButtonFigure == 'images/redSquare.png' or lastButtonFigure == 'images/greenSquare.png':
+                    return True
+            elif matrix[i][j] == 4:  # если след клетка красный квадрат
+                if lastButtonFigure == 'images/redSquare.png' or lastButtonFigure == 'images/redCircle.png' or lastButtonFigure == 'images/blueSquare.png' or lastButtonFigure == 'images/greenSquare.png':
+                    return True
+            elif matrix[i][j] == 5:  # если след клетка зелёный круг
+                if lastButtonFigure == 'images/greenCircle.png' or lastButtonFigure == 'images/redCircle.png' or lastButtonFigure == 'images/blueCircle.png' or lastButtonFigure == 'images/greenSquare.png':
+                    return True
+            elif matrix[i][j] == 6:  # если след клетка зелёный квадрат
+                if lastButtonFigure == 'images/greenSquare.png' or lastButtonFigure == 'images/redSquare.png' or lastButtonFigure == 'images/blueSquare.png' or lastButtonFigure == 'images/greenCircle.png':
+                    return True
+            elif matrix[i][j] == 0:  # если след клетка пустая
                 return True
-        elif matrix[i][j] == 2:  # если след клетка красный круг
-            if lastButtonFigure == 'images/redCircle.png' or lastButtonFigure == 'images/blueCircle.png' or lastButtonFigure == 'images/redSquare.png':
-                return True
-        elif matrix[i][j] == 3:  # если след клетка синий квадрат
-            if lastButtonFigure == 'images/blueSquare.png' or lastButtonFigure == 'images/blueCircle.png' or lastButtonFigure == 'images/redSquare.png':
-                return True
-        elif matrix[i][j] == 4:  # если след клетка красный квадрат
-            if lastButtonFigure == 'images/redSquare.png' or lastButtonFigure == 'images/redCircle.png' or lastButtonFigure == 'images/blueSquare.png':
-                return True
-        elif matrix[i][j] == 0:  # если след клетка пустая
-            return True
+            return False
         return False
 
     def victoryRule(self):
         self.modal_window = ModalWindow(self)
-        if len(self.pressedButtonsDict) == len(self.button_list):
+
+        file = open(self.levels[self.curLevel - 1], 'r')
+        lines = file.readlines()
+        matrix = [line.strip().split() for line in lines]
+        matrix = [[int(num) for num in row] for row in matrix]
+        empyFieldsCount = 0
+        for i in range(len(matrix)):
+            for j in range(len(matrix[0])):
+                if matrix[i][j] == 0:
+                    empyFieldsCount += 1
+        if len(self.pressedButtonsDict) == len(self.button_list) - empyFieldsCount:
             self.modal_window.exec_()
 
 

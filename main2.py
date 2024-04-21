@@ -6,8 +6,8 @@ import collections
 
 # Импортируем ваши пользовательские модули
 from ui import Ui_MainWindow
-from ui2 import Ui_MainWindow2
-from info import Ui_infoForm
+from ui.ui2 import Ui_MainWindow2
+from ui.info import Ui_infoForm
 
 # Ваш класс ModalWindow остается без изменений
 class ModalWindow(QtWidgets.QDialog):

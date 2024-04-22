@@ -58,6 +58,16 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.ui.restartButton.clicked.connect(self.restartLevel)
         self.ui.infoButton.clicked.connect(self.openInfoWindow)
 
+    @property
+    def curLevel(self):
+        return self._curLevel
+
+    @curLevel.setter
+    def curLevel(self, value):
+        if 1 <= value <= len(self.levels):
+            self._curLevel = value
+
+
     def switchToUi(self, uiNum):
         # Сохраняем текущие значения
         curLevel = self.curLevel
@@ -115,24 +125,20 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.infoWindow.show()
 
     def increaseLevel(self):
-        if self.curLevel < len(self.levels):
-            self.curLevel += 1
-            a = self.ui.levelLable.text()
-            self.ui.levelLable.setText(str(self.curLevel))
-            b = self.ui.levelLable.text()
-            self.game.updateLevel()
-            self.ui.gameFieldButton1.click()
+        self.curLevel += 1
+
+        self.ui.levelLable.setText(str(self.curLevel))
+
+        self.game.updateLevel()
+        self.ui.gameFieldButton1.click()
 
     def reduceLevel(self):
-        if self.curLevel > 1:
-            a = self.ui.levelLable.text()
-            self.curLevel -= 1
+        self.curLevel -= 1
 
-            self.ui.levelLable.setText(str(self.curLevel))
-            b = self.ui.levelLable.text()
+        self.ui.levelLable.setText(str(self.curLevel))
 
-            self.game.updateLevel()
-            self.ui.gameFieldButton1.click()
+        self.game.updateLevel()
+        self.ui.gameFieldButton1.click()
 
     def restartLevel(self):
         self.game.updateLevel()

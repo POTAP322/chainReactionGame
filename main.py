@@ -105,6 +105,7 @@ class MyMainWindow(QtWidgets.QMainWindow):
         self.ui.restartButton.clicked.connect(self.restartLevel)
         self.ui.infoButton.clicked.connect(self.openInfoWindow)
 
+
     def openVictoryWindow(self):
         self.modalWindow = ModalWindow(self)
         self.modalWindow.exec_()
@@ -146,7 +147,7 @@ class GameLogic:
         button = self.window.sender()
         # можно ли ходить или нет
         if len(self.window.pressedButtonsDict) > 0:
-            if not self.movePermission():
+            if not self.movePermission:
                 return
         if hasattr(button, 'is_clicked') and button.is_clicked == True:
             return
@@ -168,7 +169,7 @@ class GameLogic:
         button.setIcon(QIcon('images/newImage.png'))
 
         if len(self.window.pressedButtonsDict) > 0:
-            self.addWhiteCrossToButtons()
+            self.addWhiteCrossToPrevButton()
 
         self.window.pressedButtonsDict[button] = img
         # проверяем победили или нет
@@ -203,8 +204,9 @@ class GameLogic:
 
         self.window.pressedButtonsDict.clear()
 
+    @property
     def movePermission(self):
-        # кнопка которую хочу нажать ( её индексы будут i,j)
+        # кнопка которую хочу нажать (её индексы будут i,j)
         button = self.window.sender()
         index = self.window.gameButtonsList.index(button)
         # последня нажатая кнопка(её индексы будут k,n)
@@ -261,7 +263,7 @@ class GameLogic:
             self.window.openVictoryWindow()
 
     @staticmethod
-    def addWhiteCrossToButtons():
+    def addWhiteCrossToPrevButton():
         for button, old_image in window.pressedButtonsDict.items():
             new_image = Image.open("images/whiteCross.png")
             old_image.paste(new_image, (40, 40), new_image)
